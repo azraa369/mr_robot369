@@ -1,0 +1,513 @@
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --green: #00ff41;
+    --dim-green: #00aa2a;
+    --dark: #0a0a0a;
+    --card-bg: #0f0f0f;
+    --border: #1a3a1a;
+    --text: #c8f0c8;
+    --muted: #557755;
+    --red: #ff3333;
+    --amber: #ffaa00;
+  }
+  body { background: var(--dark); color: var(--text); font-family: 'Courier New', monospace; }
+
+  /* NAV */
+  nav {
+    background: #050505;
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    position: sticky; top: 0; z-index: 100;
+  }
+  .logo { color: var(--green); font-size: 1.1rem; font-weight: bold; padding: 1rem 0; letter-spacing: 2px; flex-shrink: 0; }
+  .logo span { color: var(--red); }
+  .nav-links { display: flex; gap: 0; flex-wrap: wrap; }
+  .nav-btn {
+    background: none; border: none; color: var(--muted); font-family: 'Courier New', monospace;
+    font-size: 0.78rem; padding: 1.1rem 0.9rem; cursor: pointer; transition: color 0.2s; letter-spacing: 1px;
+  }
+  .nav-btn:hover, .nav-btn.active { color: var(--green); }
+  .nav-btn.active { border-bottom: 2px solid var(--green); }
+
+  /* PAGES */
+  .page { display: none; padding: 2rem; max-width: 1100px; margin: 0 auto; }
+  .page.active { display: block; }
+
+  /* HERO */
+  .hero {
+    border: 1px solid var(--border); padding: 3rem 2rem; margin-bottom: 2rem;
+    background: linear-gradient(135deg, #050f05 0%, #0a0a0a 100%);
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: '01001000 01100101 01101100 01101100 01101111 00100000 01000110 01110010 01101001 01100101 01101110 01100100';
+    position: absolute; top: 0.5rem; right: 1rem; font-size: 0.6rem; color: #1a3a1a; letter-spacing: 2px; line-height: 1.8;
+    word-break: break-all; max-width: 200px;
+  }
+  .hero-title { font-size: 2.2rem; color: var(--green); letter-spacing: 4px; margin-bottom: 0.5rem; }
+  .hero-sub { color: var(--muted); font-size: 0.85rem; letter-spacing: 3px; margin-bottom: 1.5rem; }
+  .hero-desc { color: #88aa88; font-size: 0.9rem; line-height: 1.8; max-width: 600px; }
+  .cursor { animation: blink 1s infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+  .ticker {
+    background: #050505; border: 1px solid var(--border); border-top: none;
+    padding: 0.4rem 1rem; font-size: 0.72rem; color: var(--dim-green);
+    overflow: hidden; white-space: nowrap;
+  }
+  .ticker-inner { display: inline-block; animation: scroll 30s linear infinite; }
+  @keyframes scroll { from{transform:translateX(100%)} to{transform:translateX(-100%)} }
+
+  /* GRID */
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+  .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; }
+
+  /* CARDS */
+  .card {
+    background: var(--card-bg); border: 1px solid var(--border);
+    padding: 1.5rem; transition: border-color 0.2s;
+  }
+  .card:hover { border-color: var(--dim-green); }
+  .card-label { font-size: 0.65rem; color: var(--muted); letter-spacing: 3px; margin-bottom: 0.5rem; }
+  .card-title { color: var(--green); font-size: 1rem; margin-bottom: 0.7rem; letter-spacing: 1px; }
+  .card-body { color: #88aa88; font-size: 0.82rem; line-height: 1.7; }
+
+  /* FACULTY */
+  .faculty-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.5rem; }
+  .faculty-card {
+    background: var(--card-bg); border: 1px solid var(--border);
+    padding: 1.2rem; text-align: center; transition: border-color 0.2s; cursor: pointer;
+  }
+  .faculty-card:hover { border-color: var(--green); }
+  .faculty-img {
+    width: 90px; height: 90px; border-radius: 50%; margin: 0 auto 1rem;
+    border: 2px solid var(--border); object-fit: cover; filter: grayscale(30%) brightness(0.85);
+    background: #111; display: flex; align-items: center; justify-content: center;
+    font-size: 2rem; overflow: hidden;
+  }
+  .faculty-img img { width: 100%; height: 100%; object-fit: cover; }
+  .faculty-name { color: var(--green); font-size: 0.85rem; letter-spacing: 1px; margin-bottom: 0.3rem; }
+  .faculty-role { color: var(--muted); font-size: 0.7rem; letter-spacing: 1px; margin-bottom: 0.5rem; }
+  .faculty-dept { color: #557755; font-size: 0.7rem; }
+  .tag {
+    display: inline-block; background: #0a1a0a; border: 1px solid var(--border);
+    color: var(--dim-green); font-size: 0.65rem; padding: 2px 8px; letter-spacing: 1px;
+    margin: 2px;
+  }
+
+  /* DEPARTMENTS */
+  .dept-card {
+    background: var(--card-bg); border: 1px solid var(--border);
+    padding: 1.5rem; transition: border-color 0.2s;
+  }
+  .dept-card:hover { border-color: var(--green); }
+  .dept-code { color: var(--red); font-size: 0.7rem; letter-spacing: 3px; margin-bottom: 0.3rem; }
+  .dept-name { color: var(--green); font-size: 1.05rem; margin-bottom: 0.7rem; }
+  .dept-desc { color: #88aa88; font-size: 0.8rem; line-height: 1.6; margin-bottom: 1rem; }
+  .course-list { list-style: none; }
+  .course-list li {
+    color: #668866; font-size: 0.75rem; padding: 0.3rem 0;
+    border-bottom: 1px solid #111; display: flex; justify-content: space-between;
+  }
+  .course-list li:last-child { border-bottom: none; }
+  .course-code { color: var(--muted); }
+
+  /* ANNOUNCEMENTS */
+  .ann-item {
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-left: 3px solid var(--dim-green); padding: 1.2rem 1.5rem;
+    margin-bottom: 1rem; transition: border-color 0.2s;
+  }
+  .ann-item.urgent { border-left-color: var(--red); }
+  .ann-item.warning { border-left-color: var(--amber); }
+  .ann-meta { display: flex; justify-content: space-between; margin-bottom: 0.5rem; }
+  .ann-date { color: var(--muted); font-size: 0.7rem; }
+  .ann-badge {
+    font-size: 0.65rem; padding: 2px 8px; letter-spacing: 1px;
+    background: #0a1a0a; border: 1px solid var(--dim-green); color: var(--dim-green);
+  }
+  .ann-badge.red { border-color: var(--red); color: var(--red); background: #1a0505; }
+  .ann-badge.amber { border-color: var(--amber); color: var(--amber); background: #1a1000; }
+  .ann-title { color: var(--green); font-size: 0.9rem; margin-bottom: 0.4rem; }
+  .ann-body { color: #88aa88; font-size: 0.8rem; line-height: 1.6; }
+
+  /* SECTION HEADERS */
+  .section-header {
+    display: flex; align-items: center; gap: 1rem;
+    margin-bottom: 1.5rem; padding-bottom: 0.8rem; border-bottom: 1px solid var(--border);
+  }
+  .section-title { color: var(--green); font-size: 1rem; letter-spacing: 3px; }
+  .section-line { flex: 1; height: 1px; background: var(--border); }
+
+  /* STAT */
+  .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+  .stat { background: var(--card-bg); border: 1px solid var(--border); padding: 1rem; text-align: center; }
+  .stat-n { color: var(--green); font-size: 1.5rem; }
+  .stat-l { color: var(--muted); font-size: 0.65rem; letter-spacing: 2px; margin-top: 0.2rem; }
+
+  /* FOOTER */
+  footer {
+    margin-top: 3rem; border-top: 1px solid var(--border); padding: 1.5rem 2rem;
+    color: var(--muted); font-size: 0.7rem; text-align: center; letter-spacing: 2px;
+  }
+</style>
+
+<nav>
+  <div class="logo">f<span>SOCIETY</span>.EDU</div>
+  <div class="nav-links">
+    <button class="nav-btn active" onclick="show('home',this)">// ANA SAYFA</button>
+    <button class="nav-btn" onclick="show('faculty',this)">// KADRO</button>
+    <button class="nav-btn" onclick="show('departments',this)">// BÖLÜMLER</button>
+    <button class="nav-btn" onclick="show('announcements',this)">// DUYURULAR</button>
+  </div>
+</nav>
+
+<!-- HOME -->
+<div id="home" class="page active">
+  <div style="padding: 2rem 2rem 0;">
+    <div class="hero">
+      <div class="hero-title">fsociety Üniversitesi<span class="cursor">_</span></div>
+      <div class="hero-sub">// EST. 2015 — NEW YORK, NY — UNAUTHORIZED ACCESS WELCOME</div>
+      <div class="hero-desc">
+        Gerçekliği sorgulayanlar, sistemi kırmak isteyenler ve toplumun %1'ine meydan okumaya cesaret edenler için kurulmuş üniversite. Burada bilgi, güç demektir. Ama asıl güç, o gücü kimin elinde tuttuğunu bilmektir.
+      </div>
+    </div>
+    <div class="ticker">
+      <span class="ticker-inner">
+        ⚡ [UYARI] E Corp veritabanına yetkisiz erişim tespit edildi — Sistem yöneticisi bilgilendirilmedi &nbsp;&nbsp;&nbsp; 
+        ⚡ fsociety hareketi yıllık üye kaydı başladı &nbsp;&nbsp;&nbsp; 
+        ⚡ [ENCRYPTED] Whiterose projesine dahil olmak isteyenler için başvurular açıldı &nbsp;&nbsp;&nbsp; 
+        ⚡ Yeni ders: "İnsanlara nasıl güvenmezsiniz?" — Elliot Alderson &nbsp;&nbsp;&nbsp; 
+        ⚡ [SYS] 5/9 Hacking saldırısı müfredatı güncellendi &nbsp;&nbsp;&nbsp;
+      </span>
+    </div>
+
+    <div class="stats-row" style="margin-top:2rem;">
+      <div class="stat"><div class="stat-n">2,147</div><div class="stat-l">AKTİF ÖĞRENCİ</div></div>
+      <div class="stat"><div class="stat-n">6</div><div class="stat-l">BÖLÜM</div></div>
+      <div class="stat"><div class="stat-n">12</div><div class="stat-l">ÖĞRETİM ÜYESİ</div></div>
+      <div class="stat"><div class="stat-n">99%</div><div class="stat-l">ŞİFRELEME ORANI</div></div>
+      <div class="stat"><div class="stat-n">0</div><div class="stat-l">GÜVENİLEN KİŞİ</div></div>
+    </div>
+
+    <div class="section-header">
+      <div class="section-title">// ÖZEL PROGRAMLAR</div>
+      <div class="section-line"></div>
+    </div>
+    <div class="grid-2" style="margin-bottom:2rem;">
+      <div class="card">
+        <div class="card-label">// PROGRAM_01</div>
+        <div class="card-title">Siber Direniş Sertifika Programı</div>
+        <div class="card-body">fsociety metodolojisiyle kurumsal sistemlere sızma, sosyal mühendislik ve büyük veri imhası üzerine kapsamlı eğitim. Mezunlar Evil Corp'a doğrudan işe alınmaz.</div>
+      </div>
+      <div class="card">
+        <div class="card-label">// PROGRAM_02</div>
+        <div class="card-title">Dark Army Siber Operasyonlar</div>
+        <div class="card-body">Whiterose danışmanlığında yürütülen ileri düzey siber saldırı ve ağ savaşı programı. Başvuru süreci tamamen anonim. Kabul bildirimi şifrelenmiş mesaj olarak gönderilir.</div>
+      </div>
+      <div class="card">
+        <div class="card-label">// PROGRAM_03</div>
+        <div class="card-title">Kimlik ve Gerçeklik Kuramı Yüksek Lisansı</div>
+        <div class="card-body">Kim olduğunuzu, kim olmadığınızı ve bunların arasındaki farkın önemini sorgulayan felsefe-psikoloji yüksek lisans programı. Disosiyatif kimlik bozukluğu araştırmacılarına öncelik.</div>
+      </div>
+      <div class="card">
+        <div class="card-label">// PROGRAM_04</div>
+        <div class="card-title">Kurumsal Gözetleme Karşı Operasyonları</div>
+        <div class="card-body">FBI ve büyük şirketlerin gözetleme mekanizmalarını analiz etme, tersine mühendislik uygulama ve bu sistemlerin kör noktalarını keşfetme üzerine lisansüstü eğitim.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FACULTY -->
+<div id="faculty" class="page">
+  <div style="padding: 2rem;">
+    <div class="section-header">
+      <div class="section-title">// ÖĞRETİM KADROSU</div>
+      <div class="section-line"></div>
+    </div>
+    <div class="faculty-grid">
+
+      <div class="faculty-card">
+        <div class="faculty-img">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Rami_Malek_by_Gage_Skidmore.jpg/440px-Rami_Malek_by_Gage_Skidmore.jpg" onerror="this.parentNode.innerHTML='👤'" alt="Elliot Alderson">
+        </div>
+        <div class="faculty-name">Elliot Alderson</div>
+        <div class="faculty-role">Doç. Dr.</div>
+        <div class="faculty-dept">Siber Güvenlik & Sosyal Mühendislik</div>
+        <div style="margin-top:0.7rem;">
+          <span class="tag">Penetration Testing</span>
+          <span class="tag">Paranoia</span>
+          <span class="tag">Social Anxiety</span>
+        </div>
+      </div>
+
+      <div class="faculty-card">
+        <div class="faculty-img">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Christian_Slater_2017.jpg/440px-Christian_Slater_2017.jpg" onerror="this.parentNode.innerHTML='👤'" alt="Mr. Robot">
+        </div>
+        <div class="faculty-name">Mr. Robot</div>
+        <div class="faculty-role">Prof. Dr.</div>
+        <div class="faculty-dept">Anarşist Sistem Yıkımı</div>
+        <div style="margin-top:0.7rem;">
+          <span class="tag">Anarchy</span>
+          <span class="tag">Manipulation</span>
+          <span class="tag">Leadership</span>
+        </div>
+      </div>
+
+      <div class="faculty-card">
+        <div class="faculty-img">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Carly_Chaikin_2014_%28cropped%29.jpg/440px-Carly_Chaikin_2014_%28cropped%29.jpg" onerror="this.parentNode.innerHTML='👤'" alt="Darlene Alderson">
+        </div>
+        <div class="faculty-name">Darlene Alderson</div>
+        <div class="faculty-role">Dr. Öğr. Üyesi</div>
+        <div class="faculty-dept">Kötü Amaçlı Yazılım Geliştirme</div>
+        <div style="margin-top:0.7rem;">
+          <span class="tag">Malware</span>
+          <span class="tag">Ransomware</span>
+          <span class="tag">Chaos Theory</span>
+        </div>
+      </div>
+
+      <div class="faculty-card">
+        <div class="faculty-img">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Martin_Wallstr%C3%B6m.jpg/440px-Martin_Wallstr%C3%B6m.jpg" onerror="this.parentNode.innerHTML='👤'" alt="Tyrell Wellick">
+        </div>
+        <div class="faculty-name">Tyrell Wellick</div>
+        <div class="faculty-role">Prof. Dr.</div>
+        <div class="faculty-dept">Kurumsal Güç & Kariyer Suçları</div>
+        <div style="margin-top:0.7rem;">
+          <span class="tag">Corporate Espionage</span>
+          <span class="tag">Ambition</span>
+          <span class="tag">Nordic Studies</span>
+        </div>
+      </div>
+
+      <div class="faculty-card">
+        <div class="faculty-img">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/BD_Wong_by_Gage_Skidmore.jpg/440px-BD_Wong_by_Gage_Skidmore.jpg" onerror="this.parentNode.innerHTML='👤'" alt="Whiterose">
+        </div>
+        <div class="faculty-name">Whiterose</div>
+        <div class="faculty-role">Misafir Prof. (Çin Hükümeti)</div>
+        <div class="faculty-dept">Kuantum Fiziği & Zaman Teorisi</div>
+        <div style="margin-top:0.7rem;">
+          <span class="tag">Dark Army</span>
+          <span class="tag">Time Manipulation</span>
+          <span class="tag">Nuclear Physics</span>
+        </div>
+      </div>
+
+      <div class="faculty-card">
+        <div class="faculty-img">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Portia_Doubleday_2015.jpg/440px-Portia_Doubleday_2015.jpg" onerror="this.parentNode.innerHTML='👤'" alt="Angela Moss">
+        </div>
+        <div class="faculty-name">Angela Moss</div>
+        <div class="faculty-role">Dr. Öğr. Üyesi</div>
+        <div class="faculty-dept">Kurumsal Etik & Çevre Hukuku</div>
+        <div style="margin-top:0.7rem;">
+          <span class="tag">Corporate Law</span>
+          <span class="tag">Whistleblowing</span>
+          <span class="tag">PR Management</span>
+        </div>
+      </div>
+
+      <div class="faculty-card">
+        <div class="faculty-img">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Grace_Gummer_2014_%28cropped%29.jpg/440px-Grace_Gummer_2014_%28cropped%29.jpg" onerror="this.parentNode.innerHTML='👤'" alt="Dom DiPierro">
+        </div>
+        <div class="faculty-name">Dom DiPierro</div>
+        <div class="faculty-role">Öğr. Gör.</div>
+        <div class="faculty-dept">Dijital Adli Bilişim & Soruşturma</div>
+        <div style="margin-top:0.7rem;">
+          <span class="tag">FBI Methods</span>
+          <span class="tag">Forensics</span>
+          <span class="tag">Surveillance</span>
+        </div>
+      </div>
+
+      <div class="faculty-card">
+        <div class="faculty-img">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Gloria_Reuben_2015.jpg/440px-Gloria_Reuben_2015.jpg" onerror="this.parentNode.innerHTML='👤'" alt="Krista Gordon">
+        </div>
+        <div class="faculty-name">Krista Gordon</div>
+        <div class="faculty-role">Prof. Dr.</div>
+        <div class="faculty-dept">Klinik Psikoloji & Kimlik Bozuklukları</div>
+        <div style="margin-top:0.7rem;">
+          <span class="tag">DID Therapy</span>
+          <span class="tag">Trust Issues</span>
+          <span class="tag">Trauma</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- DEPARTMENTS -->
+<div id="departments" class="page">
+  <div style="padding: 2rem;">
+    <div class="section-header">
+      <div class="section-title">// BÖLÜMLER</div>
+      <div class="section-line"></div>
+    </div>
+    <div class="grid-2">
+
+      <div class="dept-card">
+        <div class="dept-code">// DEPT-01</div>
+        <div class="dept-name">Etik Hacking & Siber İstihbarat</div>
+        <div class="dept-desc">Elliot Alderson liderliğinde yürütülen bu bölüm; ağ sızma testleri, açık kaynak istihbaratı ve kurumsal güvenlik açığı analizini kapsar. "Etik" kelimesi tartışmalıdır.</div>
+        <ul class="course-list">
+          <li><span>EH101 — Hello, Friend: Ağlara Giriş</span><span class="course-code">3 AKTS</span></li>
+          <li><span>EH204 — Morpheus Shell: Sosyal Mühendislik</span><span class="course-code">4 AKTS</span></li>
+          <li><span>EH312 — Tor, VPN ve Anonimlik Sistemleri</span><span class="course-code">4 AKTS</span></li>
+          <li><span>EH401 — E Corp Altyapı Analizi (Vaka Çalışması)</span><span class="course-code">5 AKTS</span></li>
+        </ul>
+      </div>
+
+      <div class="dept-card">
+        <div class="dept-code">// DEPT-02</div>
+        <div class="dept-name">Kötü Amaçlı Yazılım & Fidye Sistemleri</div>
+        <div class="dept-desc">Darlene Alderson başkanlığında yürütülen bu bölüm, zararlı yazılım geliştirme, dağıtım ağları ve finansal veri şifreleme tekniklerini araştırır.</div>
+        <ul class="course-list">
+          <li><span>MW101 — Ransomware Temelleri: 5/9 Dersleri</span><span class="course-code">3 AKTS</span></li>
+          <li><span>MW203 — fsociety Araç Kiti Mimarisi</span><span class="course-code">4 AKTS</span></li>
+          <li><span>MW305 — Finansal Kurum Veri Şifreleme</span><span class="course-code">5 AKTS</span></li>
+          <li><span>MW410 — Küresel Ölçekte Siber Kaos Yönetimi</span><span class="course-code">5 AKTS</span></li>
+        </ul>
+      </div>
+
+      <div class="dept-card">
+        <div class="dept-code">// DEPT-03</div>
+        <div class="dept-name">Kurumsal İktidar & Ekonomik Suç</div>
+        <div class="dept-desc">Tyrell Wellick danışmanlığında sunulan bu bölüm, kurumsal yükseliş stratejileri, rakip imhası ve büyük güçlerin ekonomik manipülasyon tekniklerini inceler.</div>
+        <ul class="course-list">
+          <li><span>CE102 — E Corp Modeli: Tekelleşme Stratejileri</span><span class="course-code">3 AKTS</span></li>
+          <li><span>CE215 — Kurumsal Casusluk ve Savunma</span><span class="course-code">4 AKTS</span></li>
+          <li><span>CE320 — İktidar İçin Her Şeyi Feda Etmek</span><span class="course-code">4 AKTS</span></li>
+          <li><span>CE430 — Devlet ve Şirket İşbirliği Analizi</span><span class="course-code">5 AKTS</span></li>
+        </ul>
+      </div>
+
+      <div class="dept-card">
+        <div class="dept-code">// DEPT-04</div>
+        <div class="dept-name">Kuantum Fiziği & Paralel Gerçeklik Araştırmaları</div>
+        <div class="dept-desc">Whiterose tarafından yürütülen bu gizli bölüm; zaman makinesi teorisi, alternatif gerçeklik simülasyonları ve nükleer enerji sistemleri üzerine araştırmalar yapar. Bölüme kabul çok sınırlıdır.</div>
+        <ul class="course-list">
+          <li><span>QP101 — Zamanın Geri Dönüşü: Teori</span><span class="course-code">4 AKTS</span></li>
+          <li><span>QP230 — Çin Nükleer Programları ve Gizli Projeler</span><span class="course-code">5 AKTS</span></li>
+          <li><span>QP340 — Paralel Evrenler ve Kimlik Transferi</span><span class="course-code">5 AKTS</span></li>
+          <li><span>QP499 — Dark Army Tez Projesi (Gizli)</span><span class="course-code">10 AKTS</span></li>
+        </ul>
+      </div>
+
+      <div class="dept-card">
+        <div class="dept-code">// DEPT-05</div>
+        <div class="dept-name">Klinik Psikoloji & Kimlik Bozuklukları</div>
+        <div class="dept-desc">Dr. Krista Gordon başkanlığında; dissosiyatif kimlik bozukluğu, paranoya, travma psikolojisi ve teknoloji bağımlılığı üzerine araştırma ve terapi odaklı bir bölüm.</div>
+        <ul class="course-list">
+          <li><span>KP101 — Güven Nedir? Tanımlayabilir misiniz?</span><span class="course-code">3 AKTS</span></li>
+          <li><span>KP210 — Dissosiyatif Kimlik Bozukluğu Kliniği</span><span class="course-code">4 AKTS</span></li>
+          <li><span>KP315 — Hacker Psikolojisi ve Sosyal İzolasyon</span><span class="course-code">4 AKTS</span></li>
+          <li><span>KP420 — Gerçeklik ile Kurgu Arasında Yaşamak</span><span class="course-code">5 AKTS</span></li>
+        </ul>
+      </div>
+
+      <div class="dept-card">
+        <div class="dept-code">// DEPT-06</div>
+        <div class="dept-name">Dijital Adli Bilişim & Siber Soruşturma</div>
+        <div class="dept-desc">Dom DiPierro öğretim görevliliğinde sunulan bu bölüm, FBI soruşturma metodolojileri, siber iz sürme, delil analizi ve gözetleme sistemlerini kapsayan bir eğitim sunar.</div>
+        <ul class="course-list">
+          <li><span>DA101 — Dijital İz Analizi ve Delil Toplama</span><span class="course-code">3 AKTS</span></li>
+          <li><span>DA220 — Gözetleme Teknolojileri ve Etik Sınırlar</span><span class="course-code">4 AKTS</span></li>
+          <li><span>DA310 — 5/9 Saldırısı Soruşturması (Vaka)</span><span class="course-code">4 AKTS</span></li>
+          <li><span>DA415 — Hükümet-Şirket Casusluk Analizi</span><span class="course-code">5 AKTS</span></li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ANNOUNCEMENTS -->
+<div id="announcements" class="page">
+  <div style="padding: 2rem;">
+    <div class="section-header">
+      <div class="section-title">// SİSTEM MESAJLARI & DUYURULAR</div>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="ann-item urgent">
+      <div class="ann-meta">
+        <span class="ann-date">13 NİSAN 2026 — 03:14:07</span>
+        <span class="ann-badge red">⚠ ACİL</span>
+      </div>
+      <div class="ann-title">[SYS_ALERT] E Corp Sunucularında Yetkisiz Erişim Tespit Edildi</div>
+      <div class="ann-body">Geçtiğimiz gece saat 02:00 ile 04:00 arasında üniversitenin E Corp altyapı simülasyon laboratuvarına yetkisiz erişim gerçekleşmiştir. Tüm öğrencilerin kimlik bilgileri geçici olarak askıya alınmıştır. Durumu bilerek veya bilmeyerek yaratan kişi/kişilerin Elliot Alderson hoca ile birebir görüşmesi gerekmektedir. Not: Elliot Alderson sizi zaten hacklemişti, üzülmeyin.</div>
+    </div>
+
+    <div class="ann-item warning">
+      <div class="ann-meta">
+        <span class="ann-date">10 NİSAN 2026 — 11:00:00</span>
+        <span class="ann-badge amber">// DUYURU</span>
+      </div>
+      <div class="ann-title">Tyrell Wellick'in "Kurumsal İktidar" Dersi Mekân Değişikliği</div>
+      <div class="ann-body">İlgili ders bu hafta boyunca D-103 yerine E Corp Konferans Salonu'nda yapılacaktır. Wellick hocanın konferans salonunu "daha uygun" bulduğu belirtilmiştir. Kıyafet kodu zorunludur: takım elbise, tercihen İskandinav marka.</div>
+    </div>
+
+    <div class="ann-item">
+      <div class="ann-meta">
+        <span class="ann-date">08 NİSAN 2026 — 09:30:00</span>
+        <span class="ann-badge">// BİLGİ</span>
+      </div>
+      <div class="ann-title">Whiterose Hocanın Kuantum Fiziği Dersi Ertelendi — Süresiz</div>
+      <div class="ann-body">Whiterose hoca "kişisel proje" nedeniyle bu dönem derslerine ara vermiştir. Dersin ne zaman başlayacağı bilinmemektedir; ancak zamanlama "kesinlikle mükemmel olacak" ifade edilmiştir. Dark Army üyelerine özel asistan pozisyonları için başvurular açık tutulmaktadır.</div>
+    </div>
+
+    <div class="ann-item">
+      <div class="ann-meta">
+        <span class="ann-date">05 NİSAN 2026 — 14:22:33</span>
+        <span class="ann-badge">// ETKİNLİK</span>
+      </div>
+      <div class="ann-title">fsociety Yıllık "Fuck Society" Hackathon'u — Kayıtlar Açıldı</div>
+      <div class="ann-body">Bu yılki hackathon teması: "Küresel Finans Sisteminin Yeniden Yazılması". Birinci olan takım, E Corp simülasyon sistemine 72 saatlik tam erişim kazanacaktır. Katılım anonim, sonuçlar ise şifrelenmiş biçimde duyurulacaktır. Başarılar. Topluma selam yok.</div>
+    </div>
+
+    <div class="ann-item">
+      <div class="ann-meta">
+        <span class="ann-date">01 NİSAN 2026 — 00:00:01</span>
+        <span class="ann-badge">// MESAJ</span>
+      </div>
+      <div class="ann-title">Elliot Alderson'dan Öğrencilere Açık Mektup</div>
+      <div class="ann-body">Sizi hackledim. Hepinizi. Şifreleriniz zayıf, sosyal medyanızda ne yazdığınızı biliyorum, anne kedi fotoğrafları paylaşıyorsunuz. Ama burada öğreneceksiniz. Bana güvenin. Ya da güvenmeyin. Aslında ikincisi daha sağlıklı. — E.A.</div>
+    </div>
+
+    <div class="ann-item urgent">
+      <div class="ann-meta">
+        <span class="ann-date">28 MART 2026 — 23:59:59</span>
+        <span class="ann-badge red">// KRİTİK</span>
+      </div>
+      <div class="ann-title">[ENCRYPTED] Gizli Bölüm DEPT-04 Öğrenci Seçim Süreci Başladı</div>
+      <div class="ann-body">Whiterose'un kuantum fiziği bölümüne bu dönem yalnızca 3 öğrenci alınacaktır. Başvuru formu bu mesajın içine gizlenmiş durumdadır. Onu bulamayanlar zaten hazır değildir. Zaman önemlidir. Her zaman önemlidir.</div>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  fsociety.edu — "The world itself is just one big hoax." — Tüm haklar ihlal edilmiştir. &copy; 2026
+</footer>
+
+<script>
+function show(id, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
